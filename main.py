@@ -2,18 +2,7 @@ import pygame
 import random, math
 from slot import *
 from button import Button
-from openpyxl import Workbook, load_workbook
 
-"""workbook = Workbook()
-spreadsheet = workbook.active
-
-spreadsheet["users"] = "Hello"
-workbook.save(filename="HelloWorld.xlsx")
-workbook = load_workbook(filename="HelloWorld.xlsx")
-print(workbook.sheetnames)
-
-spreadsheet = workbook.active
-print(spreadsheet)"""
 
 
 pygame.init()
@@ -27,6 +16,7 @@ bigWin_sound = pygame.mixer.Sound("sounds/bigWin.wav")
 bg_sound = pygame.mixer.Sound("sounds/backgroundMusic.mp3")
 noWin_sound = pygame.mixer.Sound("sounds/noWin.mp3")
 click_sound = pygame.mixer.Sound("sounds/button.mp3")
+payOut_sound = pygame.mixer.Sound("sounds/payout.mp3")
 
 
 font = pygame.font.Font('freesansbold.ttf', 48)
@@ -35,11 +25,11 @@ font2 = pygame.font.Font('freesansbold.ttf', 24)
 pygame.display.set_caption('Fortune Time')
 window = pygame.display.set_mode((1000, 1000))
 board = [Slot(0, 0), Slot(200, 0), Slot(400, 0), Slot(600, 0), Slot(800, 0), Slot(0, 800), Slot(200, 800), Slot(400, 800), Slot(600, 800), Slot(800, 800), Slot(0, 200), Slot(0, 400), Slot(0, 600), Slot(800, 200), Slot(800, 400), Slot(800, 600)]
-board[random.randint(0,2)].reload(2)
-board[random.randint(3,5)].reload(4)
-board[random.randint(6,9)].reload(1)
-board[random.randint(10,12)].reload(3)
-board[random.randint(13,15)].reload(0)
+# board[random.randint(0,2)].reload(2)
+# board[random.randint(3,5)].reload(4)
+# board[random.randint(6,9)].reload(1)
+# board[random.randint(10,12)].reload(3)
+# board[random.randint(13,15)].reload(0)
 money = 100
 buttons = []
 colors = [(220, 20, 60), (255, 215, 0), (51, 204, 51), (255, 127, 127), (135, 31, 120)]
@@ -97,6 +87,7 @@ def payout(winner_type):
             mediumWin_sound.play(0)
         else:
             smallWin_sound.play(0)
+        payOut_sound.play(0, 100, 20)
     else:
         noWin_sound.play(0)
     for i in range(0, 5):
@@ -144,7 +135,7 @@ def flash(x, y):
         pygame.time.wait(100)
 def spin():
     global spin_amount
-    chosen_spot = board[random.randint(0,15)]
+    chosen_spot = board[random.choices([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14], [6,6,6,6,6,7,7,7,7,7,7,7,7,7,7], k=1)[0]]
     transparent_surface = pygame.Surface((200, 200), pygame.SRCALPHA)
     transparent_surface.fill((0, 0, 255, 150))  # Set alpha value to 128 for semi-transparency
     window.blit(transparent_surface, (chosen_spot.x, chosen_spot.y))
@@ -186,7 +177,7 @@ def draw():
         start_button.active = False
         for button in buttons:
             button.active = False
-        spin_amount = random.randint(10, 15)
+        spin_amount = random.randint(10, 20)
     if spin_amount > 0:
         spin()
     balance_text = font2.render("Balance:", True, (40, 40, 40))
