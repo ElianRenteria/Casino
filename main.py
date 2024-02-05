@@ -2,6 +2,19 @@ import pygame
 import random, math
 from slot import *
 from button import Button
+from openpyxl import Workbook, load_workbook
+
+"""workbook = Workbook()
+spreadsheet = workbook.active
+
+spreadsheet["users"] = "Hello"
+workbook.save(filename="HelloWorld.xlsx")
+workbook = load_workbook(filename="HelloWorld.xlsx")
+print(workbook.sheetnames)
+
+spreadsheet = workbook.active
+print(spreadsheet)"""
+
 
 pygame.init()
 
@@ -13,14 +26,21 @@ mediumWin_sound = pygame.mixer.Sound("sounds/mediumWin.wav")
 bigWin_sound = pygame.mixer.Sound("sounds/bigWin.wav")
 bg_sound = pygame.mixer.Sound("sounds/backgroundMusic.mp3")
 noWin_sound = pygame.mixer.Sound("sounds/noWin.mp3")
+click_sound = pygame.mixer.Sound("sounds/button.mp3")
 
 
 font = pygame.font.Font('freesansbold.ttf', 48)
+font2 = pygame.font.Font('freesansbold.ttf', 24)
 
 pygame.display.set_caption('Fortune Time')
 window = pygame.display.set_mode((1000, 1000))
 board = [Slot(0, 0), Slot(200, 0), Slot(400, 0), Slot(600, 0), Slot(800, 0), Slot(0, 800), Slot(200, 800), Slot(400, 800), Slot(600, 800), Slot(800, 800), Slot(0, 200), Slot(0, 400), Slot(0, 600), Slot(800, 200), Slot(800, 400), Slot(800, 600)]
-money = 20
+board[random.randint(0,2)].reload(2)
+board[random.randint(3,5)].reload(4)
+board[random.randint(6,9)].reload(1)
+board[random.randint(10,12)].reload(3)
+board[random.randint(13,15)].reload(0)
+money = 100
 buttons = []
 colors = [(220, 20, 60), (255, 215, 0), (51, 204, 51), (255, 127, 127), (135, 31, 120)]
 types = ["pineapple", "watermelon", "apple", "grape"]
@@ -90,7 +110,7 @@ def flash(x, y):
     for i in range(0,20):
         if flashing:
             window.fill((255, 255, 255))
-            pygame.draw.rect(window, (192, 192, 192), pygame.Rect(200, 200, 600, 600))
+            window.blit(pygame.transform.scale(pygame.image.load("assets/bg.jpg"),(600,600)),(200, 200))
             for slot in board:
                 slot.draw(window)
             window.blit(pygame.transform.scale(pygame.image.load("assets/logo2.png"), (350, 200)), (325, 225))
@@ -100,21 +120,22 @@ def flash(x, y):
             transparent_surface = pygame.Surface((200, 200), pygame.SRCALPHA)
             transparent_surface.fill((0, 0, 255, 150))  # Set alpha value to 128 for semi-transparency
             window.blit(transparent_surface, (x, y))
-            balance_text = font.render("Balance:", True, (40, 40, 40))
+            balance_text = font2.render("Balance:", True, (40, 40, 40))
             money_text = font.render("$" + str(money), True, (40, 40, 40))
             window.blit(balance_text, (250, 450))
             window.blit(money_text, (250, 500))
             pygame.display.update()
         else:
             window.fill((255, 255, 255))
-            pygame.draw.rect(window, (192, 192, 192), pygame.Rect(200, 200, 600, 600))
+            #pygame.draw.rect(window, (192, 192, 192), pygame.Rect(200, 200, 600, 600))
+            window.blit(pygame.transform.scale(pygame.image.load("assets/bg.jpg"),(600,600)),(200, 200))
             for slot in board:
                 slot.draw(window)
             window.blit(pygame.transform.scale(pygame.image.load("assets/logo2.png"), (350, 200)), (325, 225))
             for button in buttons:
                 button.draw()
             start_button.draw()
-            balance_text = font.render("Balance:", True, (40, 40, 40))
+            balance_text = font2.render("Balance:", True, (40, 40, 40))
             money_text = font.render("$" + str(money), True, (40, 40, 40))
             window.blit(balance_text, (250, 450))
             window.blit(money_text, (250, 500))
@@ -127,7 +148,7 @@ def spin():
     transparent_surface = pygame.Surface((200, 200), pygame.SRCALPHA)
     transparent_surface.fill((0, 0, 255, 150))  # Set alpha value to 128 for semi-transparency
     window.blit(transparent_surface, (chosen_spot.x, chosen_spot.y))
-    balance_text = font.render("Balance:", True, (40, 40, 40))
+    balance_text = font2.render("Balance:", True, (40, 40, 40))
     money_text = font.render("$" + str(money), True, (40, 40, 40))
     window.blit(balance_text, (250, 450))
     window.blit(money_text, (250, 500))
@@ -146,7 +167,7 @@ def spin():
 def draw():
     global spin_amount, money
     window.fill((255, 255, 255))
-    pygame.draw.rect(window, (192, 192, 192), pygame.Rect(200, 200, 600, 600))
+    window.blit(pygame.transform.scale(pygame.image.load("assets/bg.jpg"),(600,600)),(200, 200))
     for slot in board:
         slot.draw(window)
     window.blit(pygame.transform.scale(pygame.image.load("assets/logo2.png"),(350, 200)), (325, 225))
@@ -154,9 +175,10 @@ def draw():
         button.draw()
         if button.pressed:
             if money > 0:
+                click_sound.play(0,0,20)
                 button.bet += 1
                 money -= 1
-                pygame.time.wait(100)
+                pygame.time.wait(150)
             button.pressed = False
     start_button.draw()
     if start_button.pressed:
@@ -167,7 +189,7 @@ def draw():
         spin_amount = random.randint(10, 15)
     if spin_amount > 0:
         spin()
-    balance_text = font.render("Balance:", True, (40, 40, 40))
+    balance_text = font2.render("Balance:", True, (40, 40, 40))
     money_text = font.render("$" + str(money), True, (40, 40, 40))
     window.blit(balance_text, (250, 450))
     window.blit(money_text, (250,500))

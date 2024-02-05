@@ -31,6 +31,15 @@ class Slot:
         pygame.draw.rect(window, (0,0,0), self.container, 2)
         window.blit(self.sprite, (self.container.x+25, self.container.y+25))
 
+    def reload(self, newOption):
+        sprites = ["assets/lemon.png", "assets/pineapple.png", "assets/watermelon.png", "assets/apple.png",
+                   "assets/grape.png"]
+        types = ["lemon", "pineapple", "watermelon", "apple", "grape"]
+        colors = [(220, 20, 60), (255, 215, 0), (51, 204, 51), (255, 127, 127), (135, 31, 120)]
+        self.option = newOption
+        self.sprite = pygame.transform.scale(pygame.image.load(sprites[self.option]), (150, 150))
+        self.color = colors[self.option]
+        self.type = types[self.option]
 
 
 

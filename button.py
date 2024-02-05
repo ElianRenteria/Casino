@@ -15,6 +15,7 @@ class Button:
         self.multiplier = -1
     def draw(self):
         font = pygame.font.Font('freesansbold.ttf', 32)
+        font2 = pygame.font.Font('freesansbold.ttf', 24)
         multiplier_text = font.render(str(self.multiplier)+"x", True, (40, 40, 40))
         bet_text = font.render(str(self.bet), True, (20, 20, 20))
         if self.sprite.collidepoint(pygame.mouse.get_pos()):
@@ -29,14 +30,17 @@ class Button:
         else:
             pygame.draw.rect(self.window, pygame.Color(self.color).correct_gamma(1), self.sprite,0,10)
             pygame.draw.rect(self.window, pygame.Color(self.color).correct_gamma(.7), self.sprite,5,10)
-        if self.multiplier >= 9:
-            self.window.blit(multiplier_text, (self.x+20, self.y+40))
-        elif self.multiplier >= 0:
-            self.window.blit(multiplier_text, (self.x + 30, self.y + 40))
-        if self.bet >= 0:
-            self.window.blit(bet_text, (self.x+40, self.y-40))
+        if self.color != (220, 20, 60):
+            if self.multiplier >= 9:
+                self.window.blit(multiplier_text, (self.x+20, self.y+40))
+            elif self.multiplier >= 0:
+                self.window.blit(multiplier_text, (self.x + 30, self.y + 40))
+            if self.bet >= 0:
+                self.window.blit(bet_text, (self.x+40, self.y-40))
+            else:
+                self.window.blit(font.render("Start", True, (255, 255, 255)), (self.x+57, self.y+36))
         else:
-            self.window.blit(font.render("Start", True, (255, 255, 255)), (self.x+57, self.y+36))
+            self.window.blit(font2.render("reset", True, (50, 50, 50)), (self.x + 20, self.y + 40))
     def set_x(self, x):
         self.x = x
     def set_y(self, y):
