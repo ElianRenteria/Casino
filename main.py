@@ -2,18 +2,6 @@ import pygame
 import random, math
 from slot import *
 from button import Button
-from openpyxl import Workbook, load_workbook
-
-"""workbook = Workbook()
-spreadsheet = workbook.active
-
-spreadsheet["users"] = "Hello"
-workbook.save(filename="HelloWorld.xlsx")
-workbook = load_workbook(filename="HelloWorld.xlsx")
-print(workbook.sheetnames)
-
-spreadsheet = workbook.active
-print(spreadsheet)"""
 
 
 pygame.init()
